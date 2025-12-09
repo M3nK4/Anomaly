@@ -729,21 +729,27 @@
       }
 
       function fetchData() {
+        console.log('Calling wallet API at:', API_URL);
+      
         fetch(API_URL)
           .then(function(response) {
+            console.log('Wallet API response status:', response.status);
             if (!response.ok) {
-              throw new Error('Network response was not ok');
+              throw new Error('Network response was not ok: ' + response.status);
             }
             return response.json();
           })
           .then(function(data) {
+            console.log('Wallet API JSON:', data);
             populateData(data);
           })
           .catch(function(error) {
             console.error('Error fetching wallet data:', error);
+            alert('Errore nel caricamento del wallet: ' + error); // ti fa vedere l’errore a video
             showError();
           });
       }
+
 
       // Reload button click handler
       reloadBtn.addEventListener('click', function() {
@@ -759,3 +765,4 @@
   </script>
 </body>
 </html>
+
