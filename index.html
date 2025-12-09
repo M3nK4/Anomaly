@@ -731,7 +731,11 @@
       function fetchData() {
         console.log('Calling wallet API at:', API_URL);
       
-        fetch(API_URL)
+        fetch(API_URL, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true'
+          }
+        })
           .then(function(response) {
             console.log('Wallet API response status:', response.status);
             if (!response.ok) {
@@ -745,10 +749,11 @@
           })
           .catch(function(error) {
             console.error('Error fetching wallet data:', error);
-            alert('Errore nel caricamento del wallet: ' + error); // ti fa vedere l’errore a video
+            alert('Errore nel caricamento del wallet: ' + error);
             showError();
           });
       }
+
 
 
       // Reload button click handler
@@ -765,4 +770,5 @@
   </script>
 </body>
 </html>
+
 
