@@ -544,7 +544,7 @@
       <div class="grid3 mb">
         <div class="card">
           <span class="card-label">STATUS</span>
-          <span class="card-value" id="data-status">ACTIVE</span>
+          <span class="card-value" id="data-status">LIVE</span>
         </div>
         <div class="card">
           <span class="card-label">SIDE</span>
@@ -689,8 +689,8 @@
         document.getElementById('data-mrg-bar').style.width = mrgValue + '%';
         document.getElementById('data-liq-bar').style.width = liqValue + '%';
 
-        // Status is ACTIVE on successful data load
-        document.getElementById('data-status').textContent = 'ACTIVE';
+        // Status is LIVE on successful data load
+        document.getElementById('data-status').textContent = 'LIVE';
 
         hideLoading();
       }
@@ -728,5 +728,6 @@
   </script>
 </body>
 </html>
+
 
 
