@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --bg: #fef2c0;
@@ -320,10 +321,20 @@
       line-height: 1.1;
     }
 
-    .progress-box {
+    .progress-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
       background: var(--txt);
       color: var(--bg);
-      padding: 12px;
+      padding: 12px 0;
+    }
+
+    .progress-box {
+      background: transparent;
+      color: var(--bg);
+      padding: 0 12px;
+      border: none;
     }
 
     .progress-row {
@@ -332,8 +343,8 @@
       gap: 8px;
     }
 
-    .progress-row + .progress-row {
-      margin-top: 12px;
+    .progress-wrapper .progress-box + .progress-box {
+      margin-top: 6px;
     }
 
     .progress-label {
@@ -362,8 +373,90 @@
       text-align: right;
     }
 
+
+    /* =====================
+       CHART SECTION
+    ===================== */
+    .chart-section {
+      margin-top: 24px;
+      border: 2px solid var(--txt);
+      padding: 16px;
+      background: var(--bg);
+      position: relative;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--txt);
+    }
+
+    .chart-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .chart-meta {
+      font-size: 10px;
+      font-weight: 500;
+      opacity: 0.6;
+      letter-spacing: 0.5px;
+    }
+
+
+    .timeframe-selector {
+      display: flex;
+      gap: 4px;
+    }
+
+    .timeframe-btn {
+      background: transparent;
+      border: 1px solid var(--txt);
+      color: var(--txt);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 36px;
+    }
+
+    .timeframe-btn:hover {
+      background: var(--txt);
+      color: var(--bg);
+    }
+
+    .timeframe-btn.active {
+      background: var(--txt);
+      color: var(--bg);
+    }
+
+    /* Pulse animation for last chart point */
+    @keyframes chartPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(20, 52, 99, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 8px rgba(20, 52, 99, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(20, 52, 99, 0);
+      }
+    }
+
+    .chart-container {
+      position: relative;
+      height: 280px;
+      width: 100%;
+    }
+
     .logic-section {
       margin-top: 32px;
+      margin-bottom: 40px;
     }
 
     .logic-card {
@@ -411,20 +504,26 @@
       margin-bottom: 16px;
     }
 
-    /* Action card - with blue badge */
-    .action-card {
-      border: none;
-      padding: 0;
-      margin-top: 12px;
-      margin-bottom: 4px;
-      background: transparent;
+    /* Action text - simple text without badge */
+    .action-text {
+      font-size: 12px;
+      line-height: 1.8;
+      font-weight: 400;
+      margin-top: 0;
+      margin-bottom: 16px;
     }
 
-    .action-badge {
+    .action-label {
       display: inline-block;
       background: var(--txt);
       color: var(--bg);
       padding: 4px 8px;
+      font-size: 16px;
+      font-weight: 700;
+      margin: 2px 0 4px;
+    }
+
+    #data-action {
       font-size: 16px;
       font-weight: 700;
     }
@@ -467,35 +566,121 @@
     @media (max-width: 380px) {
       .card-value { font-size: 22px; }
       .wallet-amount { font-size: 20px; }
+  
+    .timeframe-selector {
+      display: flex;
+      gap: 4px;
+    }
+
+    .timeframe-btn {
+      background: transparent;
+      border: 1px solid var(--txt);
+      color: var(--txt);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 36px;
+    }
+
+    .timeframe-btn:hover {
+      background: var(--txt);
+      color: var(--bg);
+    }
+
+    .timeframe-btn.active {
+      background: var(--txt);
+      color: var(--bg);
+    }
+
+    /* Pulse animation for last chart point */
+    @keyframes chartPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(20, 52, 99, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 8px rgba(20, 52, 99, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(20, 52, 99, 0);
+      }
+    }
+
+    .chart-container { height: 240px; }
     }
 
     @media (min-width: 640px) {
       .wrapper { max-width: 560px; }
     }
 
-    @media (min-width: 768px) {
-      .wrapper { max-width: 700px; }
-      .logic-cards {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-      }
-      .logic-card { margin-bottom: 0; }
-    }
 
     @media (min-width: 1024px) {
       .wrapper { max-width: 900px; }
       .card-value { font-size: 30px; }
       .grid3 { grid-template-columns: repeat(6, 1fr); }
       .logic-cards { grid-template-columns: repeat(3, 1fr); }
-      .progress-box {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
+      .progress-wrapper {
+        flex-direction: row;
+        gap: 8px;
+        background: transparent;
+        padding: 0;
       }
-      .progress-box .progress-row + .progress-row {
+      
+      .progress-wrapper .progress-box {
+        flex: 1;
+        background: var(--txt);
+        border: 1px solid var(--txt);
+        padding: 12px;
+      }
+
+      .progress-wrapper .progress-box + .progress-box {
         margin-top: 0;
       }
+  
+    .timeframe-selector {
+      display: flex;
+      gap: 4px;
+    }
+
+    .timeframe-btn {
+      background: transparent;
+      border: 1px solid var(--txt);
+      color: var(--txt);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 36px;
+    }
+
+    .timeframe-btn:hover {
+      background: var(--txt);
+      color: var(--bg);
+    }
+
+    .timeframe-btn.active {
+      background: var(--txt);
+      color: var(--bg);
+    }
+
+    /* Pulse animation for last chart point */
+    @keyframes chartPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(20, 52, 99, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 8px rgba(20, 52, 99, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(20, 52, 99, 0);
+      }
+    }
+
+    .chart-container { height: 360px; }
     }
   </style>
 </head>
@@ -568,29 +753,47 @@
         </div>
       </div>
 
-      <div class="progress-box">
-        <div class="progress-row">
-          <span class="progress-label">MRG</span>
-          <div class="progress-track">
-            <div class="progress-fill" id="data-mrg-bar" style="width: 0%"></div>
+      <div class="progress-wrapper">
+        <div class="progress-box">
+          <div class="progress-row">
+            <span class="progress-label">MRG</span>
+            <div class="progress-track">
+              <div class="progress-fill" id="data-mrg-bar" style="width: 0%"></div>
+            </div>
+            <span class="progress-num" id="data-mrg"></span>
           </div>
-          <span class="progress-num" id="data-mrg"></span>
         </div>
-        <div class="progress-row">
-          <span class="progress-label">LIQ</span>
-          <div class="progress-track">
-            <div class="progress-fill" id="data-liq-bar" style="width: 0%"></div>
+        <div class="progress-box">
+          <div class="progress-row">
+            <span class="progress-label">LIQ</span>
+            <div class="progress-track">
+              <div class="progress-fill" id="data-liq-bar" style="width: 0%"></div>
+            </div>
+            <span class="progress-num" id="data-liq"></span>
           </div>
-          <span class="progress-num" id="data-liq"></span>
         </div>
       </div>
 
+
+      <!-- PNL EQUITY CHART -->
+      <section class="chart-section">
+        <div class="chart-header">
+          <h3 class="chart-title">PNL Equity Line</h3>
+          <div class="timeframe-selector">
+            <button class="timeframe-btn active" data-timeframe="ALL">ALL</button>
+            <button class="timeframe-btn" data-timeframe="1M">1M</button>
+            <button class="timeframe-btn" data-timeframe="1W">1W</button>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="pnlChart"></canvas>
+        </div>
+      </section>
+
       <section id="logic" class="logic-section">
-        <h3 class="section-title">Latest Trade Insight</h3>
+        <h3 class="section-title">Latest Trade Insight:</h3>
         <p class="section-date">Executed at <span id="data-last"></span></p>
-        <article class="logic-card action-card">
-          <span class="action-badge">Action: <span id="data-action"></span></span>
-        </article>
+        <p class="action-text"><span class="action-label">Last action:</span> <span id="data-action"></span></p>
         <div class="logic-cards">
           <article class="logic-card">
             <h4>Risk</h4>
@@ -618,8 +821,15 @@
 
   <script>
     (function() {
+      // Force scroll to top on page load/refresh
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+
       // URL pubblico di n8n (ngrok) + path del webhook
       var API_URL = 'https://305b3ad600d3.ngrok-free.app/webhook/wallet';
+      var CHART_API_URL = 'https://305b3ad600d3.ngrok-free.app/webhook/chart';
 
       // Header scroll behavior
       var header = document.getElementById('header');
@@ -723,6 +933,267 @@
 
       // Fetch data on page load
       fetchData();
+
+
+      // Fetch and update chart data
+      function fetchChartData(timeframe) {
+        console.log('[CHART] Fetching data for timeframe:', timeframe);
+        var url = CHART_API_URL;
+        if (timeframe && timeframe !== 'ALL') {
+          url += '?timeframe=' + timeframe.toLowerCase();
+        }
+
+        fetch(url, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true'
+          }
+        })
+          .then(function(response) {
+            if (!response.ok) {
+              throw new Error('Chart API error: ' + response.status);
+            }
+            return response.json();
+          })
+          .then(function(data) {
+            console.log('Chart data received:', data);
+            updateChart(data);
+          })
+          .catch(function(error) {
+            console.error('Error fetching chart data:', error);
+            alert('FETCH ERROR: ' + error.message);
+          });
+      }
+
+      // Update chart with new data
+      function updateChart(data) {
+        if (!window.pnlChart || !data.labels || !data.values) {
+          console.error('Invalid chart data or chart not initialized');
+          return;
+        }
+
+        // Format timestamps for display
+        var formattedLabels = data.labels.map(function(timestamp) {
+          var date = new Date(timestamp);
+          var month = date.getMonth() + 1;
+          var day = date.getDate();
+          var hours = date.getHours();
+          var minutes = date.getMinutes();
+          return month + '/' + day + ' ' + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
+        });
+
+        // Update chart data
+        window.pnlChart.data.labels = formattedLabels;
+        window.pnlChart.data.datasets[0].data = data.values;
+        window.pnlChart.update();
+      }
+
+      // Initialize PNL Chart
+      function initChart() {
+        var ctx = document.getElementById('pnlChart').getContext('2d');
+
+        // Colors from existing theme
+        var primaryColor = '#143463';
+        var bgColor = '#fef2c0';
+        var gridColor = 'rgba(20, 52, 99, 0.15)';
+
+        // Create gradient for area fill
+        var gradient = ctx.createLinearGradient(0, 0, 0, 350);
+        gradient.addColorStop(0, 'rgba(20, 52, 99, 0.2)');
+        gradient.addColorStop(1, 'rgba(20, 52, 99, 0)');
+
+        // Track hover state to prevent animation conflicts
+        var isChartHovering = false;
+
+        // Data will be loaded from webhook
+        var chartData = {
+          labels: [],
+          datasets: [{
+            label: 'Equity',
+            data: [],
+            borderColor: primaryColor,
+            backgroundColor: gradient,
+            borderWidth: 2,
+            pointBackgroundColor: primaryColor,
+            pointBorderColor: bgColor,
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            pointHoverBackgroundColor: primaryColor,
+            pointHoverBorderColor: bgColor,
+            pointHoverBorderWidth: 3,
+            tension: 0.1,
+            fill: true
+          }]
+        };
+
+
+
+        // Simple pulse plugin without animation loop
+        var pulsePlugin = {
+          id: 'pulsePlugin',
+          afterDatasetsDraw: function(chart) {
+            // Skip pulse animation if user is hovering over any point
+            var activeElements = chart.getActiveElements();
+            if (activeElements && activeElements.length > 0) {
+              return;
+            }
+
+            var ctx = chart.ctx;
+            var meta = chart.getDatasetMeta(0);
+            if (meta.data.length > 0) {
+              var lastPoint = meta.data[meta.data.length - 1];
+              var x = lastPoint.x;
+              var y = lastPoint.y;
+
+              // Pulsing circle animation
+              var pulseSize = (Date.now() % 2000) / 2000;
+              var radius = 4 + (pulseSize * 6);
+              var alpha = 0.7 - (pulseSize * 0.7);
+
+              ctx.save();
+              ctx.beginPath();
+              ctx.arc(x, y, radius, 0, 2 * Math.PI);
+              ctx.strokeStyle = 'rgba(20, 52, 99, ' + alpha + ')';
+              ctx.lineWidth = 2;
+              ctx.stroke();
+              ctx.restore();
+            }
+          }
+        };
+
+        window.pnlChart = new Chart(ctx, {
+          type: 'line',
+          data: chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              },
+              tooltip: {
+                backgroundColor: primaryColor,
+                titleColor: bgColor,
+                bodyColor: bgColor,
+                titleFont: {
+                  family: "'Roboto Mono', monospace",
+                  size: 12,
+                  weight: '700'
+                },
+                bodyFont: {
+                  family: "'Roboto Mono', monospace",
+                  size: 12,
+                  weight: '500'
+                },
+                displayColors: false,
+                padding: 12,
+                cornerRadius: 0,
+                borderColor: primaryColor,
+                borderWidth: 2,
+                callbacks: {
+                  label: function(context) {
+                    return '$' + context.parsed.y.toLocaleString();
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: {
+                  color: gridColor,
+                  borderColor: primaryColor,
+                  tickColor: gridColor,
+                  borderWidth: 2
+                },
+                ticks: {
+                  color: primaryColor,
+                  font: {
+                    family: "'Roboto Mono', monospace",
+                    size: 10,
+                    weight: '500'
+                  },
+                  maxTicksLimit: 7
+                }
+              },
+              y: {
+                grid: {
+                  color: gridColor,
+                  borderColor: primaryColor,
+                  tickColor: gridColor,
+                  borderDash: [4, 4],
+                  borderWidth: 2
+                },
+                ticks: {
+                  color: primaryColor,
+                  font: {
+                    family: "'Roboto Mono', monospace",
+                    size: 10,
+                    weight: '500'
+                  },
+                  callback: function(value) {
+                    if (value >= 1000000) {
+                      return '$' + (value / 1000000).toFixed(1) + 'M';
+                    } else if (value >= 1000) {
+                      return '$' + (value / 1000).toFixed(1) + 'K';
+                    } else if (value >= 1) {
+                      return '$' + value.toFixed(0);
+                    } else {
+                      return '$' + value.toFixed(2);
+                    }
+                  }
+                }
+              }
+            },
+            interaction: {
+              mode: 'index',
+              intersect: false
+            },
+            onHover: function(event, elements) {
+              isChartHovering = elements && elements.length > 0;
+            }
+          },
+          plugins: [pulsePlugin]
+        });
+
+        // Reset hover state when mouse leaves the canvas
+        document.getElementById('pnlChart').addEventListener('mouseleave', function() {
+          isChartHovering = false;
+        });
+
+        // Continuous pulse animation - stops during hover to prevent flickering
+        setInterval(function() {
+          if (window.pnlChart && !isChartHovering) {
+            window.pnlChart.update('none');
+          }
+        }, 100);
+
+        // Load initial chart data
+        fetchChartData('ALL');
+      }
+
+      // Timeframe selector functionality
+      function initTimeframeSelector() {
+        var buttons = document.querySelectorAll('.timeframe-btn');
+        buttons.forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            // Remove active class from all buttons
+            buttons.forEach(function(b) { b.classList.remove('active'); });
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            // Fetch chart data for selected timeframe
+            var timeframe = this.getAttribute('data-timeframe');
+            console.log('Selected timeframe:', timeframe);
+            fetchChartData(timeframe);
+          });
+        });
+      }
+
+      // Initialize chart when page loads
+      window.addEventListener('DOMContentLoaded', function() {
+        initChart();
+        initTimeframeSelector();
+      });
 
     })();
   </script>
